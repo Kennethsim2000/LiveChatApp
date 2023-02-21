@@ -4,7 +4,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { setUncaughtExceptionCaptureCallback } from "process";
 import { useEffect, useRef, useState } from "react";
-import { ChatPanel } from "../components/ChatPanel";
+// import { ChatPanel } from "../components/ChatPanel";
 import { TMessage } from "../components/HelpWidget";
 import { api as trpc } from "../utils/api";
 
