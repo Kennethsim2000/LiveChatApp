@@ -63,12 +63,14 @@ export const HelpWidget = () => {
     });
   };
 
-  // function handleSendMessage(e: React.FormEvent<HTMLFormElement>): void {
-  //   handleSendMessageAsync(e).catch((error) => {
-  //     console.log(error);
-  //   });
-  // }
-  const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
+  function handleSendMessage(e: React.FormEvent<HTMLFormElement>): void {
+    handleSendMessageAsync(e).catch((error) => {
+      console.log(error);
+    });
+  }
+  const handleSendMessageAsync = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
     e.preventDefault();
     const channel = channelRef.current;
     await channel?.sendMessage({ text });
@@ -84,7 +86,12 @@ export const HelpWidget = () => {
     setText("");
   };
 
-  const handleCloseWidget = async () => {
+  function handleCloseWidget(): void {
+    handleCloseWidgetAsync().catch((error) => {
+      console.log(error);
+    });
+  }
+  const handleCloseWidgetAsync = async () => {
     setIsChatPanelDisplayed(false);
     await channelRef.current?.leave();
     channelRef.current = null;
@@ -136,7 +143,7 @@ export const HelpWidget = () => {
     </div>
   ) : (
     <button
-      onClick={handleOpenSupportWidgetAsync}
+      onClick={handleOpenSupportWidget}
       className="fixed bottom-10 right-10 cursor-pointer bg-blue-400 p-2 px-4 text-white hover:bg-blue-500"
     >
       Speak to our Support Team.

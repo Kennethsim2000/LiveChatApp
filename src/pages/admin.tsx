@@ -43,8 +43,15 @@ const AdminPage: NextPage = () => {
     });
   };
 
+  function handleSendMessage(e: React.FormEvent<HTMLFormElement>): void {
+    handleSendMessageAsync(e).catch((error) => {
+      console.log(error);
+    });
+  }
   /*Handle sending of the message */
-  const handleSendMessage = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSendMessageAsync = async (
+    e: React.FormEvent<HTMLFormElement>
+  ) => {
     e.preventDefault();
     const channel = channelRef.current;
     await channel?.sendMessage({ text });
