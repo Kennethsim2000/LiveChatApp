@@ -4,7 +4,7 @@ import type { NextPage } from "next";
 import Head from "next/head";
 import { setUncaughtExceptionCaptureCallback } from "process";
 import { useEffect, useRef, useState } from "react";
-// import { ChatPanel } from "../components/ChatPanel";
+import { ChatPanel } from "../components/ChatPanel";
 import { TMessage } from "../components/HelpWidget";
 import { api as trpc } from "../utils/api";
 
@@ -98,38 +98,12 @@ const AdminPage: NextPage = () => {
               ))}
             </div>
           </div>
-          {/* <ChatPanel text={text} setText={setText} messages={messages} handleSendMessage={handleSendMessage}/> */}
-          <div className="w-100 flex-grow">
-            <ul className="h-[520px] overflow-auto">
-              {messages.map(({ message, id, sender }) => (
-                <li
-                  className={`mb-2 flex rounded p-1 ${
-                    sender === "1" ? "flex-row" : "flex-row-reverse"
-                  }`}
-                  key={id}
-                >
-                  <div
-                    className={`flex-none rounded-lg p-2 ${
-                      sender === "1" ? "bg-gray-200" : "bg-blue-200"
-                    }`}
-                  >
-                    {message}
-                  </div>
-                </li>
-              ))}
-            </ul>
-
-            <form onSubmit={handleSendMessage} className="flex">
-              <input
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                className="mr-1 w-full border border-gray-600 p-1 px-2"
-              ></input>
-              <button className="cursor-pointer bg-blue-400 p-2 px-4 text-white hover:bg-blue-500">
-                Send
-              </button>
-            </form>
-          </div>
+          <ChatPanel
+            text={text}
+            setText={setText}
+            messages={messages}
+            handleSendMessage={handleSendMessage}
+          />
         </section>
       </main>
     </>

@@ -104,8 +104,8 @@ export const HelpWidget = () => {
 
   return isChatPanelDisplayed ? (
     <div
-      className="fixed bottom-10 right-10 
-    flex h-96 w-72 flex-col justify-between bg-white p-6"
+      className="h-120 fixed bottom-0 
+    right-10 flex w-80 flex-col justify-between bg-white p-6"
     >
       <button
         className="absolute top-2 right-2 hover:text-red-400 "
