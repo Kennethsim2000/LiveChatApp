@@ -18,8 +18,9 @@ model Example {
 }
 
 model HelpRequest {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
+    id        String    @id @default(cuid())
+    createdAt DateTime  @default(now())
+    messages  Message[]
 }
 
 model comments {
@@ -34,4 +35,12 @@ model Student {
     date    DateTime @db.Date
     fees    Float
     late    Boolean
+}
+
+model Message {
+    id            String       @id @default(cuid()) //id of sender, if its client, then it will be their helpRequest id. If it is server, then id will be defaulted at 9999.
+    message       String
+    isClient      Boolean
+    HelpRequest   HelpRequest? @relation(fields: [helpRequestId], references: [id])
+    helpRequestId String? //HelpRequest id references the id field of HelpRequest
 }

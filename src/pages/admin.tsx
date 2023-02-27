@@ -1,23 +1,43 @@
-import { HelpRequest } from "@prisma/client";
-import { RtmChannel, RtmMessage } from "agora-rtm-sdk";
+import type { HelpRequest } from "@prisma/client";
+import type { RtmChannel, RtmMessage } from "agora-rtm-sdk";
 import type { NextPage } from "next";
 import Head from "next/head";
-import { setUncaughtExceptionCaptureCallback } from "process";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { ChatPanel } from "../components/ChatPanel";
-import { TMessage } from "../components/HelpWidget";
 import { api as trpc } from "../utils/api";
 
 const AdminPage: NextPage = () => {
+  const utils = trpc.useContext();
+
   const helpRequestsQuery = trpc.helpRequest.getHelpRequests.useQuery();
   const channelRef = useRef<RtmChannel | null>(null);
-  const [messages, setMessages] = useState<TMessage[]>([]);
+  const [helpRequestRef, sethelpRequestRef] = useState<HelpRequest | null>(
+    null
+  );
+  // const helpRequestRef = useState<HelpRequest | null>(null);
+
   /*Keep track of the text being sent to client  */
   const [text, setText] = useState("");
+  /* */
+  const { data: filteredData } =
+    trpc.message.getMessagesByHelpRequestId.useQuery(helpRequestRef?.id || "", {
+      enabled: helpRequestRef?.id ? true : false, // set `enabled` to `false` initially
+    });
+
+  const { mutate: addMessage } = trpc.message.create.useMutation({
+    onSuccess: (data) => {
+      utils.message.getMessagesByHelpRequestId.setData(
+        helpRequestRef?.id || "",
+        (oldData) => {
+          console.log(oldData);
+          return oldData?.concat(data);
+        }
+      );
+    },
+  });
 
   /*Each time the id is clicked, this method will be called */
   const handleHelpRequestClicked = async (helpRequest: HelpRequest) => {
-    setMessages([]);
     if (channelRef.current) {
       await channelRef.current.leave();
       channelRef.current = null;
@@ -30,16 +50,11 @@ const AdminPage: NextPage = () => {
     });
     const channel = client.createChannel(helpRequest.id);
     channelRef.current = channel;
+    sethelpRequestRef(helpRequest); //Whenever we click on the id, we set the new helpRequest
     await channel.join();
     channel.on("ChannelMessage", (message: RtmMessage) => {
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        {
-          message: message.text ?? "",
-          id: Math.random().toString() + "",
-          sender: "1",
-        },
-      ]);
+      //everytime a message comes in, do nothing, as the client would have made a post request
+      console.log(message);
     });
   };
 
@@ -55,16 +70,15 @@ const AdminPage: NextPage = () => {
     e.preventDefault();
     const channel = channelRef.current;
     await channel?.sendMessage({ text });
-    setMessages((prevMessages) => [
-      ...prevMessages,
-      {
+    if (helpRequestRef) {
+      addMessage({
+        //used to do a post request containing the message, helpRequest id, and boolean stating that it is from client.
+        id: helpRequestRef?.id,
         message: text,
-        id: Math.random().toString() + "",
-        sender: "0",
-      },
-    ]);
-    console.log(messages);
-    setText("");
+        isClient: false,
+      });
+      setText("");
+    }
   };
 
   return (
@@ -85,7 +99,6 @@ const AdminPage: NextPage = () => {
               {helpRequestsQuery.data?.map((helpRequest) => (
                 <button
                   className="hover:text-blue-400"
-                  //onClick={() => handleHelpRequestClicked(helpRequest)}
                   onClick={() => {
                     handleHelpRequestClicked(helpRequest).catch((err) => {
                       console.log(err);
@@ -101,7 +114,7 @@ const AdminPage: NextPage = () => {
           <ChatPanel
             text={text}
             setText={setText}
-            messages={messages}
+            messages={filteredData || []}
             handleSendMessage={handleSendMessage}
           />
         </section>

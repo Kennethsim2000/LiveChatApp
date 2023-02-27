@@ -1,4 +1,4 @@
-import { TMessage } from "./HelpWidget";
+import type { Message } from "@prisma/client";
 
 export const ChatPanel = ({
   handleSendMessage,
@@ -9,21 +9,21 @@ export const ChatPanel = ({
   handleSendMessage: (e: React.FormEvent<HTMLFormElement>) => void;
   text: string;
   setText: (newText: string) => void;
-  messages: TMessage[];
+  messages: Message[];
 }) => {
   return (
     <div className="w-100 flex-grow">
       <ul className="h-[520px] overflow-auto">
-        {messages.map(({ message, id, sender }) => (
+        {messages.map(({ message, id, isClient }) => (
           <li
             className={`mb-2 flex rounded p-1 ${
-              sender === "1" ? "flex-row" : "flex-row-reverse"
+              isClient ? "flex-row" : "flex-row-reverse"
             }`}
             key={id}
           >
             <div
               className={`flex-none rounded-lg p-2 ${
-                sender === "1" ? "bg-gray-200" : "bg-blue-200"
+                isClient ? "bg-gray-200" : "bg-blue-200"
               }`}
             >
               {message}

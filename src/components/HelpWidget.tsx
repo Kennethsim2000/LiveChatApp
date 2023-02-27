@@ -1,5 +1,6 @@
-import { HelpRequest } from "@prisma/client";
-import { RtmChannel, RtmMessage } from "agora-rtm-sdk";
+import type { HelpRequest } from "@prisma/client";
+//import { Message } from "@prisma/client";
+import type { RtmChannel, RtmMessage } from "agora-rtm-sdk";
 import { useRef, useState } from "react";
 import { api as trpc } from "../utils/api";
 
@@ -11,22 +12,48 @@ export type TMessage = {
 };
 
 export const HelpWidget = () => {
+  const utils = trpc.useContext();
   const createHelpRequestMutation =
     trpc.helpRequest.createHelpRequest.useMutation();
   const deleteHelpRequestMutation =
     trpc.helpRequest.deleteHelpRequest.useMutation();
+
   const [isChatPanelDisplayed, setIsChatPanelDisplayed] = useState(false);
-  const [senderId, setSenderId] = useState("0"); //setting the default senderId to 0 for clients
   const [text, setText] = useState(""); //this text is used to track the message to send to the server
-  const [messages, setMessages] = useState<TMessage[]>([
-    {
-      message: "Hello, how can we help you today?",
-      id: "fsdfdsf23",
-      sender: "1",
-    },
-  ]);
+
   const channelRef = useRef<RtmChannel | null>(null); //We are using useRef because we want to keep track of this RtmChannel but we do not want to use state to prevent rerendering
   const helpRequestRef = useRef<HelpRequest | null>(null);
+
+  /*On add, we automatically update the state */
+  const { mutate: addMessage } = trpc.message.create.useMutation({
+    onSuccess: (data) => {
+      utils.message.getMessagesByHelpRequestId.setData(
+        helpRequestRef.current?.id || "",
+        (oldData) => {
+          console.log(oldData);
+          return oldData?.concat(data);
+        }
+      );
+    },
+  });
+
+  // async function emulateFetch() {
+  //   await refetch();
+  //   return filteredData;
+  // }
+
+  // function emulateFetch() {
+  //   // refetch().catch(() => console.log("1"));
+  //   void refetch();
+  // }
+
+  const { data: filteredData } =
+    trpc.message.getMessagesByHelpRequestId.useQuery(
+      helpRequestRef.current?.id || "",
+      {
+        enabled: helpRequestRef.current?.id ? true : false, // set `enabled` to `false` initially
+      }
+    );
 
   /*This function handles the opening of the chatroom. */
   function handleOpenSupportWidget(): void {
@@ -38,7 +65,7 @@ export const HelpWidget = () => {
   /*This will help to create an agora instance. Create a channel, and listen to channel messages  */
   const handleOpenSupportWidgetAsync = async () => {
     setIsChatPanelDisplayed(true);
-    const helpRequest = await createHelpRequestMutation.mutateAsync();
+    const helpRequest = await createHelpRequestMutation.mutateAsync(); //here we obtain the helpRequest
     const { default: AgoraRTM } = await import("agora-rtm-sdk");
     const client = AgoraRTM.createInstance(process.env.NEXT_PUBLIC_AGORA_ID!);
     await client.login({
@@ -50,16 +77,17 @@ export const HelpWidget = () => {
     const channel = client.createChannel(helpRequest.id);
     channelRef.current = channel;
     await channel.join();
+    //Add the first message from the server to the database.
+    if (helpRequestRef.current) {
+      addMessage({
+        id: helpRequestRef.current?.id,
+        message: "Hello, how can we help you today?",
+        isClient: false,
+      });
+    }
     channel.on("ChannelMessage", (message: RtmMessage) => {
-      /*We are listening to messages and everytime there is a message, we append to the state */
-      setMessages((prevMessages) => [
-        ...prevMessages,
-        {
-          message: message.text ?? "",
-          id: Math.random().toString() + "",
-          sender: "1", //everytime we get a message coming in, we know it is from the admin
-        },
-      ]);
+      //After receiving a message from the server, we need to refilter the messages
+      console.log(message);
     });
   };
 
@@ -74,15 +102,16 @@ export const HelpWidget = () => {
     e.preventDefault();
     const channel = channelRef.current;
     await channel?.sendMessage({ text });
-    setMessages((prevMessages) => [
-      //we not gonna get a message back for the message we just send, so we need to append it manually
-      ...prevMessages,
-      {
+
+    if (helpRequestRef.current) {
+      addMessage({
+        //used to do a post request containing the message, helpRequest id, and boolean stating that it is from client.
+        id: helpRequestRef.current?.id,
         message: text,
-        id: Math.random().toString() + "",
-        sender: senderId,
-      },
-    ]);
+        isClient: true,
+      });
+    }
+
     setText("");
   };
 
@@ -113,16 +142,16 @@ export const HelpWidget = () => {
       >
         X
       </button>
-
+      {/* here i only want to render those messages whose id matches with requestId */}
       <ul className="h-[400px] overflow-auto">
-        {messages.map(({ message, id, sender }) => (
+        {filteredData?.map((singleMessage) => (
           <li
             className={`mb-2 rounded p-1 ${
-              sender === senderId ? "bg-blue-200" : "bg-gray-200"
+              singleMessage.isClient ? "bg-blue-200" : "bg-gray-200"
             }`}
-            key={id}
+            key={singleMessage.id}
           >
-            {message}
+            {singleMessage.message}
           </li>
         ))}
       </ul>
