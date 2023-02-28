@@ -3,13 +3,9 @@ import type { HelpRequest } from "@prisma/client";
 import type { RtmChannel, RtmMessage } from "agora-rtm-sdk";
 import { useRef, useState } from "react";
 import { api as trpc } from "../utils/api";
-
-/*Sender is used to distinguish between client and server*/
-export type TMessage = {
-  message: string;
-  id: string;
-  sender: string;
-};
+import { AiOutlineClose } from "react-icons/ai";
+import { FiSend } from "react-icons/fi";
+import { HelpPanel } from "./HelpPanel";
 
 export const HelpWidget = () => {
   const utils = trpc.useContext();
@@ -36,16 +32,6 @@ export const HelpWidget = () => {
       );
     },
   });
-
-  // async function emulateFetch() {
-  //   await refetch();
-  //   return filteredData;
-  // }
-
-  // function emulateFetch() {
-  //   // refetch().catch(() => console.log("1"));
-  //   void refetch();
-  // }
 
   const { data: filteredData } =
     trpc.message.getMessagesByHelpRequestId.useQuery(
@@ -132,44 +118,14 @@ export const HelpWidget = () => {
   };
 
   return isChatPanelDisplayed ? (
-    <div
-      className="h-120 fixed bottom-0 
-    right-10 flex w-80 flex-col justify-between bg-white p-6"
-    >
-      <button
-        className="absolute top-2 right-2 hover:text-red-400 "
-        onClick={handleCloseWidget}
-      >
-        X
-      </button>
-      {/* here i only want to render those messages whose id matches with requestId */}
-      <ul className="h-[400px] overflow-auto">
-        {filteredData?.map((singleMessage) => (
-          <li
-            className={`mb-2 rounded p-1 ${
-              singleMessage.isClient ? "bg-blue-200" : "bg-gray-200"
-            }`}
-            key={singleMessage.id}
-          >
-            {singleMessage.message}
-          </li>
-        ))}
-      </ul>
-
-      <form onSubmit={handleSendMessage} className="flex">
-        <input
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          className="w-full border border-gray-600 p-1 px-2"
-        ></input>
-        <button
-          onClick={() => setIsChatPanelDisplayed(true)}
-          className="cursor-pointer bg-blue-400 p-2 px-4 text-white hover:bg-blue-500"
-        >
-          Send
-        </button>
-      </form>
-    </div>
+    <HelpPanel
+      text={text}
+      setText={setText}
+      filteredData={filteredData || []}
+      handleSendMessage={handleSendMessage}
+      setIsChatPanelDisplayed={setIsChatPanelDisplayed}
+      handleCloseWidget={handleCloseWidget}
+    />
   ) : (
     <button
       onClick={handleOpenSupportWidget}
