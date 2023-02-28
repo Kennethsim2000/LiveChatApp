@@ -118,14 +118,22 @@ export const HelpWidget = () => {
   };
 
   return isChatPanelDisplayed ? (
-    <HelpPanel
-      text={text}
-      setText={setText}
-      filteredData={filteredData || []}
-      handleSendMessage={handleSendMessage}
-      setIsChatPanelDisplayed={setIsChatPanelDisplayed}
-      handleCloseWidget={handleCloseWidget}
-    />
+    <>
+      <div className="flex-start">
+        <h1 className="text-">Start a live chat</h1>
+        <div> </div>
+        <h1>Proceed to admin page</h1>
+      </div>
+
+      <HelpPanel
+        text={text}
+        setText={setText}
+        filteredData={filteredData || []}
+        handleSendMessage={handleSendMessage}
+        setIsChatPanelDisplayed={setIsChatPanelDisplayed}
+        handleCloseWidget={handleCloseWidget}
+      />
+    </>
   ) : (
     <button
       onClick={handleOpenSupportWidget}
