@@ -3,9 +3,8 @@ import type { HelpRequest } from "@prisma/client";
 import type { RtmChannel, RtmMessage } from "agora-rtm-sdk";
 import { useRef, useState } from "react";
 import { api as trpc } from "../utils/api";
-import { AiOutlineClose } from "react-icons/ai";
-import { FiSend } from "react-icons/fi";
 import { HelpPanel } from "./HelpPanel";
+import Box from "./Box";
 
 export const HelpWidget = () => {
   const utils = trpc.useContext();
@@ -119,12 +118,7 @@ export const HelpWidget = () => {
 
   return isChatPanelDisplayed ? (
     <>
-      <div className="flex-start">
-        <h1 className="text-">Start a live chat</h1>
-        <div> </div>
-        <h1>Proceed to admin page</h1>
-      </div>
-
+      <Box handleOpenSupportWidget={handleOpenSupportWidget} />
       <HelpPanel
         text={text}
         setText={setText}
@@ -135,11 +129,14 @@ export const HelpWidget = () => {
       />
     </>
   ) : (
-    <button
-      onClick={handleOpenSupportWidget}
-      className="fixed bottom-10 right-10 cursor-pointer bg-blue-400 p-2 px-4 text-white hover:bg-blue-500"
-    >
-      Speak to our Support Team.
-    </button>
+    <>
+      <Box handleOpenSupportWidget={handleOpenSupportWidget} />
+      {/* <button
+        onClick={handleOpenSupportWidget}
+        className="fixed bottom-10 right-10 cursor-pointer bg-blue-400 p-2 px-4 text-white hover:bg-blue-500"
+      >
+        Speak to our Support Team.
+      </button> */}
+    </>
   );
 };

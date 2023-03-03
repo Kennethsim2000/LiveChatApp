@@ -15,7 +15,6 @@ const Home: NextPage = () => {
         <h1 className=" mt-5 text-center text-4xl font-bold text-gray-700">
           Live Chat Application
         </h1>
-        <Box />
         <HelpWidget />
       </main>
     </>

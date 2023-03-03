@@ -4,13 +4,17 @@ import { RiAdminFill } from "react-icons/ri";
 import Link from "next/link";
 import Image from "next/image";
 
-const Box = () => {
+const Box = ({
+  handleOpenSupportWidget,
+}: {
+  handleOpenSupportWidget: () => void;
+}) => {
   return (
     <div className="absolute top-32 left-20  max-w-sm">
       <h1 className="text-lg font-bold text-gray-500">Start a live chat</h1>
       <div className="mt-2 flex border border-blue-200 bg-gray-100 p-6 hover:cursor-pointer hover:bg-blue-100">
         <Image src={Connection} width={30} height={30} alt="connection" />
-        <div className="ml-3 flex flex-col">
+        <div onClick={handleOpenSupportWidget} className="ml-3 flex flex-col">
           <h2 className="text-lg font-bold text-gray-700">Lets connect!</h2>
           <h3 className="text-md  text-gray-900">
             Connect with one of our admins
