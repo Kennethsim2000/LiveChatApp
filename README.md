@@ -1,5 +1,3 @@
-# Code documentation
-
 ## Main Page
 
 ### Helpwidget
@@ -78,7 +76,3 @@ Information is retrieved from [here](https://pusher.com/channels/pricing)
 | Business $299/month | 10 million       | 5,000                  |
 | Premium $499/month  | 20 million       | 10,000                 |
 | Growth $699/month   | 40 million       | 15,000                 |
-
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
-
-## What's next? How do I make an app with this?
