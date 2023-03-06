@@ -1,28 +1,30 @@
-# Create T3 App
+# Code documentation
+
+# Pricing of WebSockets
+
+## Agora
+
+Information is retrieved from [here](https://www.agora.io/en/pricing/chat/)
+
+|                             | Free        | Starter                                                       | Pro                                                           | Enterprise                                                                             |     |
+| --------------------------- | ----------- | ------------------------------------------------------------- | ------------------------------------------------------------- | -------------------------------------------------------------------------------------- | --- |
+| Pricing                     | Free        | Starting from $349, with additional $0.05/MAU beyond 5K MAU   | Starting from $699, with additional $0.05/MAU beyond 10K MAU  | Custom                                                                                 |
+| Monthly Active users        | Up to 500   | Up to 50K                                                     | Up to 100K                                                    | Custom                                                                                 |
+| Peak concurrent connections | 50 included | 10% of MAU included. $5/additional peak concurrent connection | 10% of MAU included. $5/additional peak concurrent connection | Customizable. 10% of MAU included by default. $5/additional peak concurrent connection |
+
+## Pusher
+
+Information is retrieved from [here](https://pusher.com/channels/pricing)
+
+|                     | Messages per day | Concurrent connections |
+| ------------------- | ---------------- | ---------------------- |
+| SandboxFree         | 200k             | 100                    |
+| Startup $49/month   | 1 million        | 500                    |
+| Pro $99/month       | 4 million        | 2,000                  |
+| Business $299/month | 10 million       | 5,000                  |
+| Premium $499/month  | 20 million       | 10,000                 |
+| Growth $699/month   | 40 million       | 15,000                 |
 
 This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
 
 ## What's next? How do I make an app with this?
-
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
-
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
-
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
-
-## Learn More
-
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
