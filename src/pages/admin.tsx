@@ -1,4 +1,4 @@
-import type { HelpRequest } from "@prisma/client";
+import type { HelpRequest, Message } from "@prisma/client";
 import type { RtmChannel, RtmMessage } from "agora-rtm-sdk";
 import type { NextPage } from "next";
 import Head from "next/head";
@@ -14,6 +14,7 @@ const AdminPage: NextPage = () => {
   const [helpRequestRef, sethelpRequestRef] = useState<HelpRequest | null>(
     null
   );
+  const helpRequestRef2 = useRef<HelpRequest | null>(null);
   // const helpRequestRef = useState<HelpRequest | null>(null);
 
   /*Keep track of the text being sent to client  */
@@ -25,7 +26,7 @@ const AdminPage: NextPage = () => {
     });
 
   const { mutate: addMessage } = trpc.message.create.useMutation({
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       utils.message.getMessagesByHelpRequestId.setData(
         helpRequestRef?.id || "",
         (oldData) => {
@@ -33,6 +34,10 @@ const AdminPage: NextPage = () => {
           return oldData?.concat(data);
         }
       );
+      const channel = channelRef.current;
+      const dataSent = JSON.stringify(data);
+      console.log(dataSent);
+      await channel?.sendMessage({ text: dataSent });
     },
   });
 
@@ -51,26 +56,49 @@ const AdminPage: NextPage = () => {
     const channel = client.createChannel(helpRequest.id);
     channelRef.current = channel;
     sethelpRequestRef(helpRequest); //Whenever we click on the id, we set the new helpRequest
+    helpRequestRef2.current = helpRequest;
     await channel.join();
     channel.on("ChannelMessage", (message: RtmMessage) => {
       //everytime a message comes in, do nothing, as the client would have made a post request
       console.log(message);
+      let obj: Message;
+      if (typeof message.text == "string") {
+        obj = JSON.parse(message.text) as Message;
+        console.log(obj);
+      }
+      console.log(helpRequestRef2);
+      if (helpRequestRef2.current) {
+        //setting state when it receives message
+        const helpId = helpRequestRef2.current.id;
+        utils.message.getMessagesByHelpRequestId.setData(helpId, (oldData) => {
+          if (oldData) {
+            return [
+              ...oldData,
+              {
+                id: obj.id,
+                message: obj.message,
+                isClient: true,
+                helpRequestId: helpId,
+              },
+            ];
+          }
+        });
+      }
     });
   };
 
-  function handleSendMessage(e: React.FormEvent<HTMLFormElement>): void {
-    handleSendMessageAsync(e).catch((error) => {
-      console.log(error);
-    });
-  }
+  // function handleSendMessage(e: React.FormEvent<HTMLFormElement>): void {
+  //   handleSendMessageAsync(e).catch((error) => {
+  //     console.log(error);
+  //   });
+  // }
   /*Handle sending of the message */
-  const handleSendMessageAsync = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+  const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const channel = channelRef.current;
-    await channel?.sendMessage({ text });
+    // const channel = channelRef.current;
+    // await channel?.sendMessage({ text: text + "-server" });
     if (helpRequestRef) {
+      //after message is posted to the database, message is sent over channel
       addMessage({
         //used to do a post request containing the message, helpRequest id, and boolean stating that it is from client.
         id: helpRequestRef?.id,

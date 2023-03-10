@@ -1,7 +1,6 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { HelpWidget } from "../components/HelpWidget";
-import Box from "../components/Box";
 
 const Home: NextPage = () => {
   return (

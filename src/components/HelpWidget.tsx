@@ -1,4 +1,4 @@
-import type { HelpRequest } from "@prisma/client";
+import type { HelpRequest, Message } from "@prisma/client";
 //import { Message } from "@prisma/client";
 import type { RtmChannel, RtmMessage } from "agora-rtm-sdk";
 import { useRef, useState } from "react";
@@ -21,7 +21,7 @@ export const HelpWidget = () => {
 
   /*On add, we automatically update the state */
   const { mutate: addMessage } = trpc.message.create.useMutation({
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       utils.message.getMessagesByHelpRequestId.setData(
         helpRequestRef.current?.id || "",
         (oldData) => {
@@ -29,10 +29,14 @@ export const HelpWidget = () => {
           return oldData?.concat(data);
         }
       );
+      const channel = channelRef.current;
+      const dataSent = JSON.stringify(data);
+      console.log(dataSent);
+      await channel?.sendMessage({ text: dataSent });
     },
   });
 
-  const { data: filteredData } =
+  const { data: filteredData, refetch } =
     trpc.message.getMessagesByHelpRequestId.useQuery(
       helpRequestRef.current?.id || "",
       {
@@ -72,21 +76,42 @@ export const HelpWidget = () => {
     }
     channel.on("ChannelMessage", (message: RtmMessage) => {
       //After receiving a message from the server, we need to refilter the messages
-      console.log(message);
+      console.log(message.text);
+      let obj: Message;
+      if (typeof message.text == "string") {
+        obj = JSON.parse(message.text) as Message;
+        console.log(obj);
+      }
+      if (helpRequestRef.current) {
+        //setting state when it receives message
+        const helpId = helpRequestRef.current.id;
+        utils.message.getMessagesByHelpRequestId.setData(helpId, (oldData) => {
+          if (oldData) {
+            console.log(oldData, "test123");
+            return [
+              ...oldData,
+              {
+                id: obj.id,
+                message: obj.message,
+                isClient: false,
+                helpRequestId: helpId,
+              },
+            ];
+          }
+        });
+      }
     });
   };
 
-  function handleSendMessage(e: React.FormEvent<HTMLFormElement>): void {
-    handleSendMessageAsync(e).catch((error) => {
-      console.log(error);
-    });
-  }
-  const handleSendMessageAsync = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
+  // function handleSendMessage(e: React.FormEvent<HTMLFormElement>): void {
+  //   handleSendMessageAsync(e).catch((error) => {
+  //     console.log(error);
+  //   });
+  // }
+  const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const channel = channelRef.current;
-    await channel?.sendMessage({ text });
+    // const channel = channelRef.current;
+    // await channel?.sendMessage({ text });
 
     if (helpRequestRef.current) {
       addMessage({
@@ -131,12 +156,6 @@ export const HelpWidget = () => {
   ) : (
     <>
       <Box handleOpenSupportWidget={handleOpenSupportWidget} />
-      {/* <button
-        onClick={handleOpenSupportWidget}
-        className="fixed bottom-10 right-10 cursor-pointer bg-blue-400 p-2 px-4 text-white hover:bg-blue-500"
-      >
-        Speak to our Support Team.
-      </button> */}
     </>
   );
 };
