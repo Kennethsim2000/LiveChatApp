@@ -12,8 +12,8 @@ export const ChatPanel = ({
   messages: Message[];
 }) => {
   return (
-    <div className="w-100 flex-grow">
-      <ul className="h-[520px] overflow-auto">
+    <div className="w-100 h-screen flex-grow">
+      <ul className="h-[80vh] overflow-auto">
         {messages.map(({ message, id, isClient }) => (
           <li
             className={`mb-2 flex rounded p-1 ${

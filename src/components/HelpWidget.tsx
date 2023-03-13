@@ -8,8 +8,8 @@ import Box from "./Box";
 
 export const HelpWidget = () => {
   const utils = trpc.useContext();
-  const createHelpRequestMutation =
-    trpc.helpRequest.createHelpRequest.useMutation();
+  // const createHelpRequestMutation =
+  //   trpc.helpRequest.createHelpRequest.useMutation();
   const deleteHelpRequestMutation =
     trpc.helpRequest.deleteHelpRequest.useMutation();
 
@@ -36,6 +36,14 @@ export const HelpWidget = () => {
     },
   });
 
+  const { mutate: createHelpRequest } =
+    trpc.helpRequest.createHelpRequest.useMutation({
+      onSuccess: (data) => {
+        helpRequestRef.current = data;
+        console.log(data);
+      },
+    });
+
   const { data: filteredData, refetch } =
     trpc.message.getMessagesByHelpRequestId.useQuery(
       helpRequestRef.current?.id || "",
@@ -54,7 +62,7 @@ export const HelpWidget = () => {
   /*This will help to create an agora instance. Create a channel, and listen to channel messages  */
   const handleOpenSupportWidgetAsync = async () => {
     setIsChatPanelDisplayed(true);
-    const helpRequest = await createHelpRequestMutation.mutateAsync(); //here we obtain the helpRequest
+    const helpRequest = createHelpRequest(); //here we obtain the helpRequest
     const { default: AgoraRTM } = await import("agora-rtm-sdk");
     const client = AgoraRTM.createInstance(process.env.NEXT_PUBLIC_AGORA_ID!);
     await client.login({
@@ -62,8 +70,14 @@ export const HelpWidget = () => {
       uid: `${Math.floor(Math.random() * 250)}`,
       token: undefined,
     });
-    helpRequestRef.current = helpRequest;
-    const channel = client.createChannel(helpRequest.id);
+    const channel2 = client.createChannel("default");
+    await channel2.join();
+    const str = "new Help Request";
+    await channel2.sendMessage({ text: str }); //send message indicating new help Request
+    console.log("code comes here");
+    const channel = client.createChannel(
+      helpRequestRef.current?.id || "default"
+    );
     channelRef.current = channel;
     await channel.join();
     //Add the first message from the server to the database.
@@ -74,6 +88,7 @@ export const HelpWidget = () => {
         isClient: false,
       });
     }
+    // await channel.sendMessage({ text: "new help request" });
     channel.on("ChannelMessage", (message: RtmMessage) => {
       //After receiving a message from the server, we need to refilter the messages
       console.log(message.text);
@@ -87,7 +102,6 @@ export const HelpWidget = () => {
         const helpId = helpRequestRef.current.id;
         utils.message.getMessagesByHelpRequestId.setData(helpId, (oldData) => {
           if (oldData) {
-            console.log(oldData, "test123");
             return [
               ...oldData,
               {
