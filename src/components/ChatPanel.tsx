@@ -1,4 +1,5 @@
 import type { Message } from "@prisma/client";
+import React, { useEffect, useRef } from "react";
 
 export const ChatPanel = ({
   handleSendMessage,
@@ -11,9 +12,17 @@ export const ChatPanel = ({
   setText: (newText: string) => void;
   messages: Message[];
 }) => {
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    console.log("code comes here");
+    console.log(messagesEndRef.current);
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }); //use messages
+
   return (
     <div className="w-100 h-screen flex-grow">
-      <ul className="h-[80vh] overflow-auto">
+      <ul className="h-[80vh] overflow-auto scroll-smooth">
         {messages.map(({ message, id, isClient }) => (
           <li
             className={`mb-2 flex rounded p-1 ${
@@ -25,6 +34,7 @@ export const ChatPanel = ({
               className={`flex-none rounded-lg p-2 ${
                 isClient ? "bg-gray-200" : "bg-blue-200"
               }`}
+              ref={messagesEndRef}
             >
               {message}
             </div>

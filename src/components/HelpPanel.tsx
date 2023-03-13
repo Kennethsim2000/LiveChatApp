@@ -1,6 +1,7 @@
 import type { Message } from "@prisma/client";
 import { AiOutlineClose } from "react-icons/ai";
 import { FiSend } from "react-icons/fi";
+import React, { useEffect, useRef } from "react";
 
 export const HelpPanel = ({
   handleSendMessage,
@@ -17,6 +18,14 @@ export const HelpPanel = ({
   setIsChatPanelDisplayed: (bool: boolean) => void;
   handleCloseWidget: () => void;
 }) => {
+  const messagesEndRef = useRef<HTMLLIElement>(null);
+
+  useEffect(() => {
+    console.log("code comes here");
+    console.log(messagesEndRef.current);
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  }); //use messages
+
   return (
     <div
       className="h-120 fixed bottom-0 
@@ -33,6 +42,7 @@ export const HelpPanel = ({
               singleMessage.isClient ? "bg-blue-200" : "bg-gray-200"
             }`}
             key={singleMessage.id}
+            ref={messagesEndRef}
           >
             {singleMessage.message}
           </li>
