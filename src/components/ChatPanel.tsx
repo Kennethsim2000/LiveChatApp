@@ -15,10 +15,10 @@ export const ChatPanel = ({
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    console.log("code comes here");
+    console.log("code comes to useEffect");
     console.log(messagesEndRef.current);
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }); //use messages
+  }, [messages]); //use messages
 
   return (
     <div className="w-100 h-screen flex-grow">

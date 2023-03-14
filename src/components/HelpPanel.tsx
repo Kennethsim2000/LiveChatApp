@@ -21,10 +21,10 @@ export const HelpPanel = ({
   const messagesEndRef = useRef<HTMLLIElement>(null);
 
   useEffect(() => {
-    console.log("code comes here");
+    console.log("code comes to useEffect");
     console.log(messagesEndRef.current);
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }); //use messages
+  }, [filteredData]); //use messages
 
   return (
     <div
