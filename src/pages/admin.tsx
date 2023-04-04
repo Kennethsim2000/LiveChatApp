@@ -29,12 +29,15 @@ const AdminPage: NextPage = () => {
       });
       const channel2 = client.createChannel("default");
       await channel2.join();
-      console.log("successfully joined");
       channel2.on("ChannelMessage", async (message: RtmMessage) => {
         console.log(message.text);
         await utils.helpRequest.getHelpRequests.invalidate();
-        // helpRequestsQuery = trpc.helpRequest.getHelpRequests.useQuery();
-        console.log("successfully updated");
+      });
+      const goodbyeChannel = client.createChannel("goodbye");
+      await goodbyeChannel.join();
+      goodbyeChannel.on("ChannelMessage", async (message: RtmMessage) => {
+        console.log(message.text);
+        await utils.helpRequest.getHelpRequests.invalidate();
       });
     }
     setupAgora().catch(() => {

@@ -1,6 +1,6 @@
 import type { HelpRequest, Message } from "@prisma/client";
 //import { Message } from "@prisma/client";
-import type { RtmChannel, RtmMessage } from "agora-rtm-sdk";
+import type { RtmChannel, RtmClient, RtmMessage } from "agora-rtm-sdk";
 import { useRef, useState } from "react";
 import { api as trpc } from "../utils/api";
 import { ClientPanel } from "./ClientPanel";
@@ -18,6 +18,7 @@ export const HelpWidget = () => {
 
   const channelRef = useRef<RtmChannel | null>(null); //We are using useRef because we want to keep track of this RtmChannel but we do not want to use state to prevent rerendering
   const helpRequestRef = useRef<HelpRequest | null>(null);
+  const [agoraClient, setAgoraClient] = useState<RtmClient | null>(null);
 
   /*On add, we automatically update the state */
   const { mutate: addMessage } = trpc.message.create.useMutation({
@@ -70,6 +71,7 @@ export const HelpWidget = () => {
       uid: `${Math.floor(Math.random() * 250)}`,
       token: undefined,
     });
+    setAgoraClient(client);
     const channel2 = client.createChannel("default");
     await channel2.join();
     const str = "new Help Request";
@@ -117,11 +119,6 @@ export const HelpWidget = () => {
     });
   };
 
-  // function handleSendMessage(e: React.FormEvent<HTMLFormElement>): void {
-  //   handleSendMessageAsync(e).catch((error) => {
-  //     console.log(error);
-  //   });
-  // }
   const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // const channel = channelRef.current;
@@ -153,6 +150,11 @@ export const HelpWidget = () => {
       id: helpRequestRef.current?.id,
     });
     helpRequestRef.current = null;
+    if (!agoraClient) return;
+    const goodbyeChannel = agoraClient.createChannel("goodbye");
+    await goodbyeChannel.join();
+    const str = "Goodbye";
+    await goodbyeChannel.sendMessage({ text: str });
   };
 
   return isChatPanelDisplayed ? (
