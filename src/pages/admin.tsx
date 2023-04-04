@@ -3,7 +3,7 @@ import type { RtmChannel, RtmMessage } from "agora-rtm-sdk";
 import type { NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useRef, useState } from "react";
-import { ChatPanel } from "../components/ChatPanel";
+import { ServerPanel } from "../components/ServerPanel";
 import { api as trpc } from "../utils/api";
 
 const AdminPage: NextPage = () => {
@@ -143,8 +143,8 @@ const AdminPage: NextPage = () => {
       <main className="container mx-auto flex  flex-col p-4">
         <h1 className="text-xl">Admin Page</h1>
 
-        <section className="flex h-[90vh] gap-8 ">
-          <div className="mb-2 rounded bg-white p-4">
+        <section className="flex flex-grow gap-8">
+          <div className="mb-2 rounded  p-4">
             <h2 className="mb-2 text-xl text-blue-800">Help Request Ids</h2>
             <div className="flex flex-col gap-2">
               {helpRequestQuery?.map((helpRequest) => (
@@ -162,7 +162,7 @@ const AdminPage: NextPage = () => {
               ))}
             </div>
           </div>
-          <ChatPanel
+          <ServerPanel
             text={text}
             setText={setText}
             messages={filteredData || []}

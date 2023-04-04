@@ -3,7 +3,7 @@ import { AiOutlineClose } from "react-icons/ai";
 import { FiSend } from "react-icons/fi";
 import React, { useEffect, useRef } from "react";
 
-export const HelpPanel = ({
+export const ClientPanel = ({
   handleSendMessage,
   text,
   setText,

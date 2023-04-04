@@ -1,7 +1,8 @@
 import type { Message } from "@prisma/client";
 import React, { useEffect, useRef } from "react";
+import { FiSend } from "react-icons/fi";
 
-export const ChatPanel = ({
+export const ServerPanel = ({
   handleSendMessage,
   text,
   setText,
@@ -21,8 +22,8 @@ export const ChatPanel = ({
   }, [messages]); //use messages
 
   return (
-    <div className="w-100 h-screen flex-grow">
-      <ul className="h-[80vh] overflow-auto scroll-smooth">
+    <div className="w-100 bg-gray flex min-h-full flex-grow flex-col">
+      <ul className="h-[80vh] overflow-auto scroll-smooth bg-gray-50 pt-4">
         {messages.map(({ message, id, isClient }) => (
           <li
             className={`mb-2 flex rounded p-1 ${
@@ -42,14 +43,15 @@ export const ChatPanel = ({
         ))}
       </ul>
 
-      <form onSubmit={handleSendMessage} className="flex">
+      <form onSubmit={handleSendMessage} className="relative flex">
         <input
           value={text}
           onChange={(e) => setText(e.target.value)}
-          className="mr-1 w-full border border-gray-600 p-1 px-2"
+          className="relative w-full bg-gray-200 p-3 px-2 focus:outline-none "
+          placeholder="Enter your message..."
         ></input>
-        <button className="cursor-pointer bg-blue-400 p-2 px-4 text-white hover:bg-blue-500">
-          Send
+        <button className="absolute right-0 top-1 cursor-pointer p-2 px-4 text-white ">
+          <FiSend className="h-6 w-6 text-gray-500" />
         </button>
       </form>
     </div>

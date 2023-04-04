@@ -3,7 +3,7 @@ import type { HelpRequest, Message } from "@prisma/client";
 import type { RtmChannel, RtmMessage } from "agora-rtm-sdk";
 import { useRef, useState } from "react";
 import { api as trpc } from "../utils/api";
-import { HelpPanel } from "./HelpPanel";
+import { ClientPanel } from "./ClientPanel";
 import Box from "./Box";
 
 export const HelpWidget = () => {
@@ -158,7 +158,7 @@ export const HelpWidget = () => {
   return isChatPanelDisplayed ? (
     <>
       <Box handleOpenSupportWidget={handleOpenSupportWidget} />
-      <HelpPanel
+      <ClientPanel
         text={text}
         setText={setText}
         filteredData={filteredData || []}
