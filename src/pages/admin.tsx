@@ -143,7 +143,7 @@ const AdminPage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="container mx-auto flex  flex-col p-4">
+      <main className="container mx-auto flex max-h-screen flex-col p-4">
         <h1 className="text-xl">Admin Page</h1>
 
         <section className="flex flex-grow flex-col gap-8 md:flex-row">
@@ -165,12 +165,14 @@ const AdminPage: NextPage = () => {
               ))}
             </div>
           </div>
-          <ServerPanel
-            text={text}
-            setText={setText}
-            messages={filteredData || []}
-            handleSendMessage={handleSendMessage}
-          />
+          <div className="flex-grow">
+            <ServerPanel
+              text={text}
+              setText={setText}
+              messages={filteredData || []}
+              handleSendMessage={handleSendMessage}
+            />
+          </div>
         </section>
       </main>
     </>
