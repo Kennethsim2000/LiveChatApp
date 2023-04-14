@@ -158,7 +158,7 @@ export const HelpWidget = () => {
   };
 
   return isChatPanelDisplayed ? (
-    <>
+    <div className="sm:px-4">
       <Box handleOpenSupportWidget={handleOpenSupportWidget} />
       <ClientPanel
         text={text}
@@ -168,7 +168,7 @@ export const HelpWidget = () => {
         setIsChatPanelDisplayed={setIsChatPanelDisplayed}
         handleCloseWidget={handleCloseWidget}
       />
-    </>
+    </div>
   ) : (
     <>
       <Box handleOpenSupportWidget={handleOpenSupportWidget} />

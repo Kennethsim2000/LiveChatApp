@@ -23,7 +23,7 @@ export const ServerPanel = ({
 
   return (
     <div className="w-100 bg-gray flex min-h-full flex-grow flex-col">
-      <ul className="h-[80vh] overflow-auto scroll-smooth bg-gray-50 pt-4">
+      <ul className="h-80 overflow-auto scroll-smooth bg-gray-50 pt-4 md:h-[80vh]">
         {messages.map(({ message, id, isClient }) => (
           <li
             className={`mb-2 flex rounded p-1 ${

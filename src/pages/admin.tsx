@@ -146,8 +146,8 @@ const AdminPage: NextPage = () => {
       <main className="container mx-auto flex  flex-col p-4">
         <h1 className="text-xl">Admin Page</h1>
 
-        <section className="flex flex-grow gap-8">
-          <div className="mb-2 rounded  p-4">
+        <section className="flex flex-grow flex-col gap-8 md:flex-row">
+          <div className="mb-2 rounded p-4">
             <h2 className="mb-2 text-xl text-blue-800">Help Request Ids</h2>
             <div className="flex flex-col gap-2">
               {helpRequestQuery?.map((helpRequest) => (

@@ -27,42 +27,44 @@ export const ClientPanel = ({
   }, [filteredData]); //use messages
 
   return (
-    <div
-      className="h-120 fixed bottom-0 
-    right-10 flex w-80 flex-col justify-between rounded-lg bg-white px-6 pt-6 pb-2"
-    >
-      <AiOutlineClose
-        className="absolute top-2 right-2 h-5 w-5 text-gray-700 hover:cursor-pointer hover:text-red-400"
-        onClick={handleCloseWidget}
-      />
-      <ul className=" mt-2 h-[400px] overflow-auto">
-        {filteredData?.map((singleMessage) => (
-          <li
-            className={`mb-2 rounded p-1 ${
-              singleMessage.isClient ? "bg-blue-200" : "bg-gray-200"
-            }`}
-            key={singleMessage.id}
-            ref={messagesEndRef}
-          >
-            {singleMessage.message}
-          </li>
-        ))}
-      </ul>
+    <div className="mr-4 box-border">
+      <div
+        className="h-120 fixed bottom-0 
+     flex w-full flex-col justify-between rounded-lg bg-white px-6 pt-6 pb-2 md:right-10 md:w-80"
+      >
+        <AiOutlineClose
+          className="absolute top-2 right-2 h-5 w-5 text-gray-700 hover:cursor-pointer hover:text-red-400"
+          onClick={handleCloseWidget}
+        />
+        <ul className=" mt-2 h-[400px] overflow-auto">
+          {filteredData?.map((singleMessage) => (
+            <li
+              className={`mb-2 rounded p-1 ${
+                singleMessage.isClient ? "bg-blue-200" : "bg-gray-200"
+              }`}
+              key={singleMessage.id}
+              ref={messagesEndRef}
+            >
+              {singleMessage.message}
+            </li>
+          ))}
+        </ul>
 
-      <form onSubmit={handleSendMessage} className="mt-auto flex bg-gray-200">
-        <input
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          className="w-full  bg-gray-200 p-1 px-2 focus:outline-none"
-          placeholder="Enter your message..."
-        ></input>
-        <button
-          onClick={() => setIsChatPanelDisplayed(true)}
-          className="cursor-pointer  p-2 px-4 text-white"
-        >
-          <FiSend className="h-5 w-5 text-gray-500" />
-        </button>
-      </form>
+        <form onSubmit={handleSendMessage} className="mt-auto flex bg-gray-200">
+          <input
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            className="w-full  bg-gray-200 p-1 px-2 focus:outline-none"
+            placeholder="Enter your message..."
+          ></input>
+          <button
+            onClick={() => setIsChatPanelDisplayed(true)}
+            className="cursor-pointer  p-2 px-4 text-white"
+          >
+            <FiSend className="h-5 w-5 text-gray-500" />
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
