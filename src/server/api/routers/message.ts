@@ -38,3 +38,5 @@ export const messageRouter = createTRPCRouter({
       return messages;
     }),
 });
+
+/*Performing CRUD operation on the Message. */

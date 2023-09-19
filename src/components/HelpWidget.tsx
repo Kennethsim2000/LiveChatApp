@@ -32,7 +32,6 @@ export const HelpWidget = () => {
       );
       const channel = channelRef.current;
       const dataSent = JSON.stringify(data);
-      console.log(dataSent);
       await channel?.sendMessage({ text: dataSent });
     },
   });
@@ -67,7 +66,6 @@ export const HelpWidget = () => {
     const { default: AgoraRTM } = await import("agora-rtm-sdk");
     const client = AgoraRTM.createInstance(process.env.NEXT_PUBLIC_AGORA_ID!);
     await client.login({
-      //login does not require a token for authentication
       uid: `${Math.floor(Math.random() * 250)}`,
       token: undefined,
     });
@@ -76,7 +74,6 @@ export const HelpWidget = () => {
     await channel2.join();
     const str = "new Help Request";
     await channel2.sendMessage({ text: str }); //send message indicating new help Request
-    console.log("code comes here");
     const channel = client.createChannel(
       helpRequestRef.current?.id || "default"
     );
@@ -93,11 +90,9 @@ export const HelpWidget = () => {
     // await channel.sendMessage({ text: "new help request" });
     channel.on("ChannelMessage", (message: RtmMessage) => {
       //After receiving a message from the server, we need to refilter the messages
-      console.log(message.text);
       let obj: Message;
       if (typeof message.text == "string") {
         obj = JSON.parse(message.text) as Message;
-        console.log(obj);
       }
       if (helpRequestRef.current) {
         //setting state when it receives message

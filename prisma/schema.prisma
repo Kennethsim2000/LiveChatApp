@@ -23,20 +23,6 @@ model HelpRequest {
     messages  Message[]
 }
 
-model comments {
-    id      String @id @default(cuid())
-    comment String
-}
-
-model Student {
-    id      String   @id @default(cuid())
-    name    String
-    modules Int
-    date    DateTime @db.Date
-    fees    Float
-    late    Boolean
-}
-
 model Message {
     id            String       @id @default(cuid()) //id of sender, if its client, then it will be their helpRequest id. If it is server, then id will be defaulted at 9999.
     message       String

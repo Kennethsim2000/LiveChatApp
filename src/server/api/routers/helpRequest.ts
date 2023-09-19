@@ -27,3 +27,5 @@ export const helpRequestRouter = createTRPCRouter({
     return helpRequests;
   }),
 });
+
+/*Various procedures to perform CRUD operation on HelpRequest. */

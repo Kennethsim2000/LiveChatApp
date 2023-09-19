@@ -30,7 +30,6 @@ const AdminPage: NextPage = () => {
       const channel2 = client.createChannel("default");
       await channel2.join();
       channel2.on("ChannelMessage", async (message: RtmMessage) => {
-        console.log(message.text);
         await utils.helpRequest.getHelpRequests.invalidate();
       });
       const goodbyeChannel = client.createChannel("goodbye");
