@@ -91,9 +91,7 @@ const AdminPage: NextPage = () => {
       let obj: Message;
       if (typeof message.text == "string") {
         obj = JSON.parse(message.text) as Message;
-        console.log(obj);
       }
-      console.log(helpRequestRef2);
       if (helpRequestRef2.current) {
         //setting state when it receives message
         const helpId = helpRequestRef2.current.id;
@@ -114,11 +112,6 @@ const AdminPage: NextPage = () => {
     });
   };
 
-  // function handleSendMessage(e: React.FormEvent<HTMLFormElement>): void {
-  //   handleSendMessageAsync(e).catch((error) => {
-  //     console.log(error);
-  //   });
-  // }
   /*Handle sending of the message */
   const handleSendMessage = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

@@ -45,13 +45,15 @@ Page that allows admin to handle client Help Requests
 
 #### Clicking Help Request: `handleHelpRequestClicked`
 
-- Establish connection to AgoraRTM channel.
+- Leave any previous channel it was connected to.
+- Establish connection to AgoraRTM channel(HelpRequestId).
 - Listen on channel for incoming messages.
+- Upon receiving an incoming Message, it will update its local state.
 
 #### Sending Message: `handleSendMessage`
 
-- Sends a message via the channel.
 - Execute Post Request of message to database.
+- Sends a message via the channel.
 
 ## **Database**
 
