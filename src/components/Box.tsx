@@ -23,19 +23,8 @@ const Box = ({
       </div>
 
       <h1 className="mt-6 text-lg font-bold text-gray-500">
-        Proceed to admin pag
+        Proceed to admin page
       </h1>
-      {/* <Link href="admin">
-        <div className="mt-2 flex items-center border border-blue-200 bg-gray-100 p-6 hover:cursor-pointer hover:bg-blue-100">
-          <RiAdminFill className="h-10 w-10 text-gray-500" />
-          <div className="ml-3 flex flex-col">
-            <h2 className="text-lg font-bold text-gray-700">Be the admin!</h2>
-            <h3 className="text-md  whitespace-normal text-gray-900">
-              Communicate with multiple clients
-            </h3>
-          </div>
-        </div>
-      </Link> */}
       <a target="_blank" href="/admin" rel="noopener noreferrer">
         <div className="mt-2 flex items-center border border-blue-200 bg-gray-100 p-6 hover:cursor-pointer hover:bg-blue-100">
           <RiAdminFill className="h-10 w-10 text-gray-500" />
