@@ -11,8 +11,10 @@ const Box = ({
 }) => {
   return (
     <div className="absolute top-20 left-0 max-w-sm px-4 md:top-32 md:left-20">
+      <h1 className="text-lg font-bold text-gray-500">Start a live chat</h1>
       <h1 className="text-lg font-bold text-gray-500">
-        Start a live chat(Please Proceed to admin page on another tab first)
+        Please proceed to admin page on another tab first before clicking on
+        connect
       </h1>
       <div className="mt-2 flex border border-blue-200 bg-gray-100 p-6 hover:cursor-pointer hover:bg-blue-100">
         <Image src={Connection} width={30} height={30} alt="connection" />
